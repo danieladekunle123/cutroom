@@ -9,7 +9,7 @@
   "scripts": {
     "start": "electron .",
     "test": "node --test test/logic.test.js",
-    "package": "electron-packager . Cutroom --platform=win32 --arch=x64 --out=dist --overwrite --icon=build/icon.ico --ignore=\"^/(dist|test|build/icon\\.svg|README\\.md|Cutroom\\.lnk|[^/]+\\.(mp3|mp4))\""
+    "package": "electron-packager . Cutroom --platform=win32 --arch=x64 --out=dist --overwrite --icon=build/icon.ico --ignore=\"^/(dist|test|build/icon\\.svg|\\.gitignore|[^/]+\\.(md|lnk|mp3|mp4))\""
   },
   "devDependencies": {
     "@electron/packager": "^20.3.0",
