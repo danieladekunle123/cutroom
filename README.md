@@ -8,21 +8,19 @@
 
 ## Getting started
 
-Cutroom runs on Windows. It needs [Node.js](https://nodejs.org), plus `yt-dlp` and `ffmpeg`:
+Cutroom runs on 64-bit Windows.
 
-```
-winget install yt-dlp.yt-dlp
-winget install Gyan.FFmpeg
-```
+1. [Download the latest release](https://github.com/danieladekunle123/cutroom/releases/latest) and extract the whole zip.
+2. Install `yt-dlp` and `ffmpeg`, which Cutroom uses to download and cut video:
 
-Then download this repo, open a terminal in its folder, and run:
+   ```
+   winget install yt-dlp.yt-dlp
+   winget install Gyan.FFmpeg
+   ```
 
-```
-npm install
-npm start
-```
+3. Open `Cutroom.exe` in the extracted folder.
 
-To build an app you can open without a terminal, run `npm run package`. It creates `dist\Cutroom-win32-x64\Cutroom.exe`.
+The app isn't code-signed, so Windows may show "Windows protected your PC" the first time. To open it anyway, choose **More info**, then **Run anyway**.
 
 If links stop loading, update yt-dlp first, since these sites change often:
 
@@ -60,6 +58,17 @@ Your videos, clips and downloaded files live in `%LOCALAPPDATA%\Cutroom`, separa
 Private, age-restricted and subscriber-only videos won't load, because Cutroom can't sign in to sites.
 
 YouTube, TikTok and Twitch logos are trademarks of their owners and are only used to show which sites work. Their shapes come from Simple Icons.
+
+## Building from source
+
+You'll need [Node.js](https://nodejs.org), plus `yt-dlp` and `ffmpeg` as above. Download this repo, open a terminal in its folder, and run:
+
+```
+npm install
+npm start
+```
+
+To build an app you can open without a terminal, run `npm run package`. It creates `dist\Cutroom-win32-x64\Cutroom.exe`.
 
 ## Running the tests
 
