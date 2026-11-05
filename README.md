@@ -1,15 +1,28 @@
-# Cutroom
+<p align="center">
+  <img src="build/icon.png" alt="Cutroom logo" width="96" height="96">
+</p>
 
-A Windows desktop app that cuts audio and video clips out of YouTube videos, TikTok videos and Twitch clips.
+<h1 align="center">Cutroom</h1>
 
-**To open it:** double-click `Cutroom.lnk` in this folder (the app itself is `dist\Cutroom-win32-x64\Cutroom.exe`).
+<p align="center">A Windows desktop app that cuts audio and video clips out of YouTube videos, TikTok videos and Twitch clips.</p>
 
-It needs `yt-dlp` and `ffmpeg` installed on the PC:
+## Getting started
+
+Cutroom runs on Windows. It needs [Node.js](https://nodejs.org), plus `yt-dlp` and `ffmpeg`:
 
 ```
 winget install yt-dlp.yt-dlp
 winget install Gyan.FFmpeg
 ```
+
+Then download this repo, open a terminal in its folder, and run:
+
+```
+npm install
+npm start
+```
+
+To build an app you can open without a terminal, run `npm run package`. It creates `dist\Cutroom-win32-x64\Cutroom.exe`.
 
 If links stop loading, update yt-dlp first, since these sites change often:
 
@@ -42,17 +55,14 @@ winget upgrade yt-dlp.yt-dlp
 
 ## Where things are stored
 
-Your videos, clips and downloaded files live in `%LOCALAPPDATA%\Cutroom`, separate from this folder. Press Clear under the video list to delete full-quality downloads. Removing a video deletes all of its stored files. Exported files are never touched.
+Your videos, clips and downloaded files live in `%LOCALAPPDATA%\Cutroom`, separate from the app. Press Clear under the video list to delete full-quality downloads. Removing a video deletes all of its stored files. Exported files are never touched.
 
 Private, age-restricted and subscriber-only videos won't load, because Cutroom can't sign in to sites.
 
 YouTube, TikTok and Twitch logos are trademarks of their owners and are only used to show which sites work. Their shapes come from Simple Icons.
 
-## Working on the code
+## Running the tests
 
 ```
-npm install
-npm start
 npm test
-npm run package
 ```
