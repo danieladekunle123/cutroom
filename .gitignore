@@ -1,0 +1,7 @@
+node_modules/
+dist/
+
+# Clips and machine-specific files
+*.mp3
+*.mp4
+*.lnk

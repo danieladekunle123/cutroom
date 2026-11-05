@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' file:; style-src 'self' file:; font-src 'self' file:; img-src 'self' file: https: data:; media-src file:;">
+  <title>Cutroom</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+        <rect x="3" y="12" width="4" height="8" rx="2" />
+        <rect x="10" y="6" width="4" height="20" rx="2" />
+        <rect x="17" y="2" width="4" height="28" rx="2" />
+        <rect x="24" y="9" width="4" height="14" rx="2" />
+        <path class="mark-cut" d="M1 27 31 5" />
+      </svg>
+      <span class="wordmark">Cutroom</span>
+    </div>
+    <form id="add-form" class="add-form">
+      <div class="add-field">
+        <input id="add-input" type="text" spellcheck="false" autocomplete="off" aria-label="Video link" placeholder="Paste YouTube, TikTok or Twitch links">
+        <div id="add-logos" class="add-logos" aria-hidden="true"></div>
+      </div>
+      <button type="submit" class="btn">Add video</button>
+    </form>
+    <div class="topbar-spacer"></div>
+  </header>
+
+  <main id="workspace" class="workspace">
+    <aside class="panel library" aria-label="Videos">
+      <h2 class="panel-title">Videos</h2>
+      <ul id="library-list" class="library-list"></ul>
+      <div class="library-foot">
+        <span id="cache-size" class="num">Stored videos: 0 MB</span>
+        <button id="clear-cache" type="button" class="text-btn">Clear</button>
+      </div>
+    </aside>
+
+    <section class="stage" aria-label="Editor">
+      <div id="editor" class="editor" hidden>
+        <div class="panel viewer">
+          <div class="viewer-head">
+            <h1 id="video-title"></h1>
+            <p id="video-meta" class="num"></p>
+          </div>
+          <div class="screen">
+            <video id="video" preload="auto" playsinline></video>
+            <div id="screen-status" class="screen-status" hidden>
+              <img id="screen-thumb" alt="">
+              <div class="screen-status-body">
+                <p id="status-label"></p>
+                <div class="progress"><div id="status-bar"></div></div>
+                <button id="status-retry" type="button" class="btn" hidden>Try again</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel timeline-panel">
+          <div class="transport">
+            <button id="play" type="button" class="icon-btn icon-btn-solid" aria-label="Play" title="Play or pause (Space)"></button>
+            <div class="clock num"><span id="time-now">0:00.00</span> <span id="time-total" class="faint"></span></div>
+            <div class="divider"></div>
+            <button id="mark-in" type="button" class="btn" title="Start a clip at the playhead (I)">Mark start <kbd>I</kbd></button>
+            <button id="mark-out" type="button" class="btn" title="Finish the clip at the playhead (O)">Mark end <kbd>O</kbd></button>
+            <button id="play-clips" type="button" class="btn" title="Play the ticked clips one after another, skipping the gaps">Preview</button>
+            <div class="transport-right">
+              <label class="volume" title="Volume">
+                <span class="sr-only">Volume</span>
+                <span id="volume-icon" class="inline-icon"></span>
+                <input id="volume" type="range" min="0" max="1" step="0.01" value="1">
+              </label>
+              <div class="divider"></div>
+              <button id="zoom-out" type="button" class="icon-btn" aria-label="Zoom out" title="Zoom out"></button>
+              <button id="zoom-in" type="button" class="icon-btn" aria-label="Zoom in" title="Zoom in"></button>
+              <button id="zoom-fit" type="button" class="text-btn" title="Show the whole video">Fit</button>
+            </div>
+          </div>
+          <div id="timeline" class="timeline" tabindex="0" role="application" aria-label="Timeline. Drag across the waveform to mark a clip.">
+            <canvas></canvas>
+            <div class="tl-playhead"></div>
+          </div>
+          <div id="overview" class="overview"><div class="overview-thumb"></div></div>
+        </div>
+      </div>
+
+      <div id="empty-stage" class="panel empty-stage">
+        <h1>Cut the best parts out of any video</h1>
+        <div id="empty-logos" class="empty-logos"></div>
+        <p>Paste a link to load its picture and sound, then mark the parts you want.</p>
+        <form id="empty-form" class="add-form add-form-large">
+          <input id="empty-input" type="text" spellcheck="false" autocomplete="off" aria-label="Video link" placeholder="YouTube, TikTok or Twitch link">
+          <button type="submit" class="btn btn-primary">Add video</button>
+        </form>
+        <p id="tools-missing" class="error-text" hidden></p>
+      </div>
+    </section>
+
+    <aside id="side" class="side" aria-label="Clips and export" hidden>
+      <section class="panel clips-panel">
+        <div class="panel-head">
+          <h2 class="panel-title">Clips <span id="clip-count" class="faint num"></span></h2>
+          <button id="sort-clips" type="button" class="text-btn" hidden>Sort by time</button>
+        </div>
+        <form id="ranges-form" class="ranges">
+          <input id="ranges-input" type="text" spellcheck="false" autocomplete="off" aria-label="Add clips by timestamp" aria-describedby="ranges-error" placeholder="0:13-0:27, 0:38-0:50">
+          <button type="submit" class="btn">Add</button>
+        </form>
+        <p id="ranges-error" class="error-text" hidden></p>
+        <ol id="clip-list" class="clip-list"></ol>
+      </section>
+
+      <section class="panel export-panel" aria-label="Export">
+        <div class="field-row">
+          <div class="segmented" role="radiogroup" aria-label="Format">
+            <button type="button" role="radio" data-kind="mp4">Video MP4</button>
+            <button type="button" role="radio" data-kind="mp3">Audio MP3</button>
+          </div>
+          <select id="quality" aria-label="Quality" title="Quality"></select>
+        </div>
+        <div class="segmented segmented-full" role="radiogroup" aria-label="Files">
+          <button type="button" role="radio" data-merge="false">Separate files</button>
+          <button type="button" role="radio" data-merge="true">Merge into one</button>
+        </div>
+
+        <div class="cut">
+          <div class="cut-head">
+            <span id="cut-label"></span>
+            <strong id="cut-total" class="num"></strong>
+          </div>
+          <div id="cut-strip" class="cut-strip" aria-hidden="true"></div>
+        </div>
+
+        <div class="folder">
+          <span id="out-dir" class="folder-path"></span>
+          <button id="choose-folder" type="button" class="text-btn">Change</button>
+        </div>
+
+        <div id="export-idle">
+          <button id="export" type="button" class="btn btn-primary btn-wide"></button>
+        </div>
+        <div id="export-busy" hidden>
+          <div class="busy-head">
+            <span id="export-label"></span>
+            <span id="export-pct" class="num"></span>
+          </div>
+          <div class="progress"><div id="export-bar"></div></div>
+          <button id="export-cancel" type="button" class="text-btn">Cancel</button>
+        </div>
+        <p id="export-error" class="error-text" hidden></p>
+        <p id="export-done" class="done-text" hidden>
+          <span id="export-done-label"></span>
+          <button id="export-show" type="button" class="text-btn">Show in folder</button>
+        </p>
+      </section>
+    </aside>
+  </main>
+
+  <div id="toast" class="toast" role="status" hidden></div>
+
+  <script src="../shared/logic.js"></script>
+  <script src="icons.js"></script>
+  <script src="timeline.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
